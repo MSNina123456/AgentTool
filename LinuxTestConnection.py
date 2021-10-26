@@ -745,7 +745,7 @@ def check_lad_endpoints(sa=None, eh=None):
         if check_full_endpoint(new_endpoint):
             write_log_output(rule_id, rule_group_id, status_passed, empty_failure_reason, "TCP test for {" + new_endpoint + "} (port 443) succeeded", new_endpoint)
         else:
-            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "TCP test for {" + new_endpoint + "} (port 443) failed, please verify if your storage account url is accessible via curl", new_endpoint)
+            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "TCP test for {" + new_endpoint + "} (port 443) failed", new_endpoint)
         
         check_ssl_connectivity(new_endpoint)
 
@@ -754,7 +754,7 @@ def check_lad_endpoints(sa=None, eh=None):
         if check_full_endpoint(new_endpoint):
             write_log_output(rule_id, rule_group_id, status_passed, empty_failure_reason, "TCP test for {" + new_endpoint + "} (port 443) succeeded", new_endpoint)
         else:
-            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "TCP test for {" + new_endpoint + "} (port 443) failed, please verify if your event hub url is accessible via curl", new_endpoint)
+            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "TCP test for {" + new_endpoint + "} (port 443) failed", new_endpoint)
         
         check_ssl_connectivity(new_endpoint)
     # for endpoint in lad_endpoints:
@@ -774,7 +774,7 @@ def check_ssl_connectivity(endpoint):
         if code == 0 and "CONNECTED" in out:
             write_log_output(rule_id, rule_group_id, status_passed, empty_failure_reason, "SSL test for {" + endpoint + "} (port 443) succeeded")
         else:
-            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "SSL test for {" + endpoint + "} (port 443) failed, please verify if your url is accessible via openssl s_client -connect url")
+            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "SSL test for {" + endpoint + "} (port 443) failed")
     
     FNULL.close()
 
@@ -788,7 +788,7 @@ def check_lad_ssl_connectivity(sa=None, eh=None):
         if code == 0 and "CONNECTED" in out:
             write_log_output(rule_id, rule_group_id, status_passed, empty_failure_reason, "SSL test for {" + sa + ".table.core.windows.net} (port 443) succeeded")
         else:
-            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "SSL test for {" + sa + ".table.core.windows.net} (port 443) failed, please verify if your storage account url is accessible via openssl s_client -connect url")
+            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "SSL test for {" + sa + ".table.core.windows.net} (port 443) failed")
     
     if eh is not None and subprocess.call(["which", "openssl"], stdout=FNULL, stderr=FNULL) == 0:
         openssl_eh = "echo \"q\" | openssl s_client -connect %s.servicebus.windows.net:443" % (eh)
@@ -796,7 +796,7 @@ def check_lad_ssl_connectivity(sa=None, eh=None):
         if code == 0 and "CONNECTED" in out:
             write_log_output(rule_id, rule_group_id, status_passed, empty_failure_reason, "SSL test for {" + eh + ".table.core.windows.net} (port 443) succeeded")
         else:
-            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "SSL test for {" + eh + ".table.core.windows.net} (port 443) failed, please verify if your event hub url is accessible via openssl s_client -connect url")
+            write_log_output(rule_id, rule_group_id, status_failed, empty_failure_reason, "SSL test for {" + eh + ".table.core.windows.net} (port 443) failed")
     
     FNULL.close()
 
@@ -1007,6 +1007,7 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
     if len(sys.argv) > 1 and len(sys.argv) < 3:
         if sys.argv[1] is not None:
             SA = sys.argv[1]
+            print("sa:"+SA)
             check_lad_endpoints(SA, EH)
             # check_lad_ssl_connectivity(SA, EH)
             for line in output:
@@ -1016,6 +1017,8 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
         if sys.argv[1] is not None or sys.argv[2] is not None:
             SA = sys.argv[1]
             EH = sys.argv[2]
+            print("sa:"+SA)
+            print("eh:"+EH)
             check_lad_endpoints(SA, EH)
             # check_lad_ssl_connectivity(SA, EH)
             for line in output:
@@ -1025,6 +1028,8 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
         if sys.argv[1] is not None or sys.argv[2] is not None:
             SA = sys.argv[1]
             EH = sys.argv[2]
+            # print("sa:"+SA)
+            # print("eh:"+EH)
             check_lad_endpoints(SA, EH)
             # check_lad_ssl_connectivity(SA, EH)
         
@@ -1036,7 +1041,9 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
 
             if sys.argv[3] is not None:
                 try:
+                    #print("output:"+sys.argv[3])
                     output_path = sys.argv[3]
+                    #print("output1:"+output_path)
                     os.makedirs(output_path)
                 except OSError:
                     if not os.path.isdir(output_path):
@@ -1050,10 +1057,17 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
 if __name__ == "__main__":
     print ("start......")
     if len(sys.argv) > 3:
+        # print(sys.argv[1])
+        # print(sys.argv[2])
+        # print(sys.argv[3])
+        # print(sys.argv[4])
         main(sys.argv)
     elif len(sys.argv) > 2:
+        # print(sys.argv[1])
+        # print(sys.argv[2])
         main(sys.argv[1], sys.argv[2])
     elif len(sys.argv) > 1:
+        # print(sys.argv[1])
         main(sys.argv[1])
     else:
         main()
