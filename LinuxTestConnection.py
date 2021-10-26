@@ -1052,17 +1052,10 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
 if __name__ == "__main__":
     print ("start......")
     if len(sys.argv) > 3:
-        # print(sys.argv[1])
-        # print(sys.argv[2])
-        # print(sys.argv[3])
-        # print(sys.argv[4])
         main(sys.argv)
     elif len(sys.argv) > 2:
-        # print(sys.argv[1])
-        # print(sys.argv[2])
         main(sys.argv[1], sys.argv[2])
     elif len(sys.argv) > 1:
-        # print(sys.argv[1])
         main(sys.argv[1])
     else:
         main()
