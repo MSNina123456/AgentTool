@@ -1036,9 +1036,7 @@ def main(SA=None, EH=None, output_path=None, return_json_output="False"):
 
             if sys.argv[3] is not None:
                 try:
-                    #print("output:"+sys.argv[3])
                     output_path = sys.argv[3]
-                    #print("output1:"+output_path)
                     os.makedirs(output_path)
                 except OSError:
                     if not os.path.isdir(output_path):
